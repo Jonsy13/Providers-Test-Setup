@@ -12,6 +12,8 @@ jobs:
       # AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
       nodes: 3
       node_type: "t2.micro"
+    container:
+      image: litmuschaos/cypress:latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -31,6 +33,8 @@ jobs:
       # AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
       nodes: 3
       node_type: "t2.micro"
+    container:
+      image: litmuschaos/cypress:latest
     steps:
       - uses: actions/checkout@v2
         with:
