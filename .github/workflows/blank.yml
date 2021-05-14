@@ -13,9 +13,11 @@ jobs:
       nodes: 3
       node_type: "t2.micro"
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Settings up EKS Cluster
         run: |
-          echo $(pwd)
           chmod 755 k8s/eks/1-cluster-setup/setup
           k8s/eks/1-cluster-setup/setup
 
@@ -30,6 +32,9 @@ jobs:
       nodes: 3
       node_type: "t2.micro"
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Tearing down EKS Cluster
         run: |
           chmod 755 k8s/eks/2-cluster-cleanup/cleanup
