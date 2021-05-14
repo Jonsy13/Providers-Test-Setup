@@ -13,7 +13,7 @@ jobs:
       nodes: 3
       node_type: "t2.micro"
     container:
-      image: litmuschaos/cypress:latest
+      image: jonsy13/kubera-litmus:latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -34,7 +34,7 @@ jobs:
       nodes: 3
       node_type: "t2.micro"
     container:
-      image: litmuschaos/cypress:latest
+      image: jonsy13/kubera-litmus:latest
     steps:
       - uses: actions/checkout@v2
         with:
