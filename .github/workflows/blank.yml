@@ -8,8 +8,8 @@ jobs:
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
       region: "eu-west-2"
-      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
-      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
       nodes: 3
       node_type: "t2.micro"
     container:
@@ -29,8 +29,8 @@ jobs:
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
       region: "eu-west-2"
-      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
-      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
       nodes: 3
       node_type: "t2.micro"
     container:
