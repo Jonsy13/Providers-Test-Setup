@@ -1,36 +1,34 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the action will run. 
+name: EKS-Pipeline
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  CLUSTER-SETUP:
+    runs-on: [self-hosted, EKS]
+    env:
+      CI_PIPELINE_ID: ${{ github.run_id }}
+      region: "eu-west-2"
+      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
+      nodes: 3
+      node_type: "t2.micro"
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Settings up EKS Cluster
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          chmod 755 ./k8s/1-cluster-setup/setup
+          ./k8s/1-cluster-setup/setup
+
+  CLUSTER-CLEANUP:
+    runs-on: [self-hosted, EKS]
+    env:
+      CI_PIPELINE_ID: ${{ github.run_id }}
+      region: "eu-west-2"
+      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
+      nodes: 3
+      node_type: "t2.micro"
+    steps:
+      - name: Tearing down EKS Cluster
+        run: |
+          chmod 755 ./k8s/1-cluster-setup/setup
+          ./k8s/1-cluster-setup/setup
