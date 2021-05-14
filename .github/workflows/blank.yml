@@ -15,8 +15,8 @@ jobs:
     steps:
       - name: Settings up EKS Cluster
         run: |
-          chmod 755 ./k8s/eks/1-cluster-setup/setup
-          ./k8s/eks/1-cluster-setup/setup
+          chmod 755 k8s/eks/1-cluster-setup/setup
+          k8s/eks/1-cluster-setup/setup
 
   CLUSTER-CLEANUP:
     runs-on: [self-hosted, EKS]
