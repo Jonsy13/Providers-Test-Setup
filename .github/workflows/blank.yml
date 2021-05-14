@@ -8,14 +8,14 @@ jobs:
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
       region: "eu-west-2"
-      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
-      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
+      # AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
+      # AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
       nodes: 3
       node_type: "t2.micro"
     steps:
       - name: Settings up EKS Cluster
         run: |
-          ls
+          echo $(pwd)
           chmod 755 k8s/eks/1-cluster-setup/setup
           k8s/eks/1-cluster-setup/setup
 
@@ -25,8 +25,8 @@ jobs:
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
       region: "eu-west-2"
-      AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
-      AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
+      # AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
+      # AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY_}}"
       nodes: 3
       node_type: "t2.micro"
     steps:
