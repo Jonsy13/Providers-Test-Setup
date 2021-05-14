@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Settings up EKS Cluster
         run: |
+          ls
           chmod 755 k8s/eks/1-cluster-setup/setup
           k8s/eks/1-cluster-setup/setup
 
@@ -31,5 +32,5 @@ jobs:
     steps:
       - name: Tearing down EKS Cluster
         run: |
-          chmod 755 ./k8s/eks/2-cluster-cleanup/cleanup
-          ./k8s/eks/2-cluster-cleanup/cleanup
+          chmod 755 k8s/eks/2-cluster-cleanup/cleanup
+          k8s/eks/2-cluster-cleanup/cleanup
