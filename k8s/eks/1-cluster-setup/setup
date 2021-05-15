@@ -8,7 +8,7 @@ set -e
 path=$(pwd)
 echo $path
 CI_PIPELINE_ID=$(echo $CI_PIPELINE_ID)
-cluster_name="portal-e2e-litmus-"$CI_PIPELINE_ID
+cluster_name="portal-e2e-litmus-"$CI_PIPELINE_ID-$CLUSTER_NUM
 
 # setup aws configuration
 echo '#### SETTING UP AWS CONFIGURATION ####'

@@ -58,7 +58,7 @@ function do_up(){
   local node_type="${5}"
   local sa="${6}"
 
-  eksctl create cluster --managed --spot --name="${cluster_name}" --nodes="${nodes}" --version="${kubernetes_version}" --region="${region}" --node-type="${node_type}"
+  eksctl create cluster --name="${cluster_name}" --nodes="${nodes}" --version="${kubernetes_version}" --region="${region}" --node-type="${node_type}"
   kubectl create serviceaccount "${sa}" --namespace kube-system
   kubectl create clusterrolebinding "${sa}" --clusterrole=cluster-admin --serviceaccount="kube-system:${sa}"
 }

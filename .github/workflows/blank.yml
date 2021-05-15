@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  CLUSTER-SETUP:
+  CLUSTER-1-SETUP:
     runs-on: [self-hosted, EKS]
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
@@ -11,7 +11,8 @@ jobs:
       AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
       AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
       nodes: 3
-      node_type: "t2.micro"
+      node_type: "t2.medium"
+      CLUSTER_NUM: 1
     container:
       image: jonsy13/kubera-litmus:latest
     steps:
@@ -23,16 +24,58 @@ jobs:
           chmod 755 k8s/eks/1-cluster-setup/setup
           k8s/eks/1-cluster-setup/setup
 
-  CLUSTER-CLEANUP:
+  CLUSTER-2-SETUP:
     runs-on: [self-hosted, EKS]
-    needs: CLUSTER-SETUP
     env:
       CI_PIPELINE_ID: ${{ github.run_id }}
       region: "eu-west-2"
       AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
       AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-      nodes: 3
+      nodes: 2
       node_type: "t2.micro"
+      CLUSTER_NUM: 2
+    container:
+      image: jonsy13/kubera-litmus:latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Settings up EKS Cluster
+        run: |
+          chmod 755 k8s/eks/1-cluster-setup/setup
+          k8s/eks/1-cluster-setup/setup
+
+  CLUSTER-1-CLEANUP:
+    if: always()
+    runs-on: [self-hosted, EKS]
+    needs: CLUSTER-1-SETUP
+    env:
+      CI_PIPELINE_ID: ${{ github.run_id }}
+      region: "eu-west-2"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      CLUSTER_NUM: 1
+    container:
+      image: jonsy13/kubera-litmus:latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Tearing down EKS Cluster
+        run: |
+          chmod 755 k8s/eks/2-cluster-cleanup/cleanup
+          k8s/eks/2-cluster-cleanup/cleanup
+
+  CLUSTER-2-CLEANUP:
+    if: always()
+    runs-on: [self-hosted, EKS]
+    needs: CLUSTER-2-SETUP
+    env:
+      CI_PIPELINE_ID: ${{ github.run_id }}
+      region: "eu-west-2"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      CLUSTER_NUM: 2
     container:
       image: jonsy13/kubera-litmus:latest
     steps:
