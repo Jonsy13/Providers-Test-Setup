@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: kube-config
-          path: ~/.kube/config
+          path: .kube/config
 
   CLUSTER-2-SETUP:
     runs-on: ubuntu-latest
