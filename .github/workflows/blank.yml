@@ -112,11 +112,10 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     needs: [Tests-Finder, Basic-Tests, PORTAL-SETUP] # Depends on previous job
-    container:
-      image: jonsy13/kubera-litmus:latest
     strategy:
       matrix:
         dir: ${{fromJson(needs.Tests-Finder.outputs.dir)}} # List matrix strategy from directories dynamically
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
         with:
