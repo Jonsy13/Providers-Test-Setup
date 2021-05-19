@@ -22,6 +22,7 @@ echo "---------Services Running in Litmus Namespace----------"
 kubectl get svc -n litmus
 
 # Waiting for pods to be ready
+echo "---------Waiting for Portal Pods to be ready-----------"
 kubectl wait --for=condition=Ready pods --all --namespace litmus --timeout=180s
 
 # Getting The LoadBalancer IP for accessing Litmus-Portal
