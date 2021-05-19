@@ -1,0 +1,14 @@
+{
+  "baseUrl": "http://172.18.0.2:32358/",
+  "experimentalFetchPolyfill": true,
+  "viewportWidth": 3840,
+  "viewportHeight": 2160,
+  "defaultCommandTimeout": 10000,
+  "chromeWebSecurity": false,
+  "video": false,
+  "experimentalNetworkStubbing": true,
+  "env": {
+    "authURL": "/auth",
+    "apiURL": "/api"
+  }
+}

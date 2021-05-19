@@ -1,0 +1,162 @@
+stages:
+  - cluster-setup
+  - portal-setup
+  - cypress-setup
+  - basic-auth-tests
+  - gui-tests
+  - portal-cleanup
+  - cluster-cleanup
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+cache: &global_cache
+  key: ${CI_PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - Cypress/node_modules
+
+EKS-Setup:
+  stage: cluster-setup
+  tags:
+    - litmus-portal
+  script:
+    - chmod 755 build/eks/1-cluster-setup/setup
+    - ./build/eks/1-cluster-setup/setup
+  artifacts:
+    when: always
+    paths:
+      - .kube/
+  cache: {}
+
+Portal-Setup:
+  when: always
+  stage: portal-setup
+  tags: 
+    - litmus-portal
+  script:
+    - make install-portal
+  artifacts:
+    when: always
+    paths:
+      - .kube/
+      - url.txt
+  cache: {}
+
+Cypress-Setup:
+  when: always
+  stage: cypress-setup
+  image: ${CYPRESS_IMAGE}
+  tags:
+    - litmus-portal
+  script:
+    - make cypress-setup
+
+TCID-EKS-Portal-GUI-Auth:
+  when: always
+  stage: basic-auth-tests
+  dependencies:
+    - Portal-Setup
+  image:
+    name: ${CYPRESS_IMAGE}
+  tags:
+    - litmus-portal
+  script:
+    - source url.txt
+    - URL=$URL make pre-test-setup
+  artifacts:
+    when: always
+    paths:
+      - Cypress/cypress/screenshots
+  cache:
+    <<: *global_cache
+    policy: pull
+
+.cypress-e2e:
+  when: always
+  stage: gui-tests
+  dependencies:
+    - Portal-Setup
+  image:
+    name: ${CYPRESS_IMAGE}
+  tags:
+    - litmus-portal
+  artifacts:
+    when: always
+    paths:
+      - Cypress/cypress/screenshots
+  cache:
+    <<: *global_cache
+    policy: pull
+
+TCID-EKS-Portal-GUI-Routes:
+  extends: .cypress-e2e
+  script:
+    - source url.txt
+    - URL=$URL make routes-check
+
+TCID-EKS-portal-GUI-ScheduleWorkflow:
+  extends: .cypress-e2e
+  script: 
+    - source url.txt
+    - URL=$URL make create-workflow-check
+
+TCID-EKS-Portal-GUI-CommunityData:
+  extends: .cypress-e2e
+  script: 
+    - source url.txt
+    - URL=$URL make community-page-check
+
+TCID-EKS-Portal-GUI-AccountSettings:
+  extends: .cypress-e2e
+  script: 
+    - source url.txt
+    - URL=$URL make account-settings-check
+
+TCID-EKS-Portal-GUI-BrowseWorkflows:
+  extends: .cypress-e2e
+  script: 
+    - source url.txt
+    - URL=$URL make browse-workflow-check
+
+Portal-Cleanup:
+  when: always
+  stage: portal-cleanup
+  tags: 
+    - litmus-portal
+  script:
+    - make uninstall-portal
+  artifacts:
+    when: always
+    paths:
+      - .kube/
+  cache: {}
+
+Pipeline Status Update:
+  when: always
+  stage: portal-cleanup
+  tags: 
+    - litmus-portal
+  script:
+    - make pipeline-status-update
+  artifacts:
+    when: always
+    paths:
+      - .kube/
+  cache: {}
+    
+EKS-Cleanup:
+  when: always
+  stage: cluster-cleanup
+  tags:
+    - litmus-portal
+  script:
+    - chmod 755 build/eks/2-cluster-cleanup/cleanup
+    - ./build/eks/2-cluster-cleanup/cleanup
+  artifacts:
+    when: always
+    paths:
+      - .kube/
+  cache: {}
