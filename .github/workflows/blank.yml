@@ -53,6 +53,9 @@ jobs:
   PORTAL-SETUP:
     needs: CLUSTER-1-SETUP
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
     container:
       image: jonsy13/kubera-litmus:latest
     steps:
@@ -73,6 +76,9 @@ jobs:
   PORTAL-CLEANUP:
     needs: PORTAL-SETUP
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
     container:
       image: jonsy13/kubera-litmus:latest
     steps:
