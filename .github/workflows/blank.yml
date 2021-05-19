@@ -126,7 +126,7 @@ jobs:
         uses: cypress-io/github-action@v2
         continue-on-error: false
         with:
-          spec: cypress/integration/Parallel_Tests/${{matrix.dir}}/*.spec.js
+          spec: cypress/integration/Parallel_Tests/${{matrix.dir}}*.spec.js
           working-directory: Cypress/
           config-file: cypress.prod.json
         env:
@@ -148,7 +148,7 @@ jobs:
       - name: Downloading artifacts
         uses: actions/download-artifact@v2
         with:
-          name: kube-config
+          name: kube-config-1
           path: ".kube"
       - name: Litmus-Portal Cleanup
         run: |
