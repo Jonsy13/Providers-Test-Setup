@@ -21,7 +21,7 @@ jobs:
     needs: [Tests-Finder] # Depends on previous job
     strategy:
       matrix:
-        dir: ${{fromJson(needs.Test-Finder.outputs.dir)}} # List matrix strategy from directories dynamically
+        dir: ${{fromJson(needs.Tests-Finder.outputs.dir)}} # List matrix strategy from directories dynamically
     steps:
       - uses: actions/checkout@v2
         with:
