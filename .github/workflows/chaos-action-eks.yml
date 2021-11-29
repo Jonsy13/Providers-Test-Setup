@@ -18,6 +18,9 @@ jobs:
           aws-region: eu-west-2
 
       - run: |
+          export PATH=$PATH:/usr/local/bin/aws
+
+      - run: |
           whereis aws
           echo $PATH
 
