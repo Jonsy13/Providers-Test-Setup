@@ -1,0 +1,41 @@
+name: EKS-Pipeline
+on:
+  workflow_dispatch:
+
+jobs:
+  Chaos-Eks-Action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - name: Running Litmus pod delete chaos experiment
+        uses: litmuschaos/github-chaos-actions@v0.3.1
+        env:
+          ##Pass kubeconfig data from secret in base 64 encoded form
+          ## cat $HOME/.kube/config | base64
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          ##If litmus is not installed
+          INSTALL_LITMUS: true
+          ##Give application info under chaos
+          APP_NS: default
+          APP_LABEL: run=nginx
+          APP_KIND: deployment
+          EXPERIMENT_NAME: pod-delete
+          ##Custom image can also been used
+          EXPERIMENT_IMAGE: litmuschaos/go-runner
+          EXPERIMENT_IMAGE_TAG: latest
+          IMAGE_PULL_POLICY: Always
+          TOTAL_CHAOS_DURATION: 30
+          CHAOS_INTERVAL: 10
+          FORCE: false
+          ##Select true if you want to uninstall litmus after chaos
+          LITMUS_CLEANUP: true
