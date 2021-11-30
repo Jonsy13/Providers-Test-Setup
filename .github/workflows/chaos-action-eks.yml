@@ -6,10 +6,6 @@ on:
 jobs:
   chaos-action:
     runs-on: ubuntu-latest
-    # AWS secrets are required to configure & run chaos
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -29,12 +25,12 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
       - name: Setup Litmus
-        uses: litmuschaos/github-chaos-actions@master
+        uses: uditgaurav/k8s-actions@master
         env:
           INSTALL_LITMUS: true
 
       - name: Running Litmus pod delete chaos experiment
-        uses: litmuschaos/github-chaos-actions@master
+        uses: uditgaurav/k8s-actions@master
         env:
           EXPERIMENT_NAME: pod-delete
           EXPERIMENT_IMAGE: litmuschaos/go-runner
@@ -43,6 +39,6 @@ jobs:
 
       - name: Uninstall Litmus
         if: always()
-        uses: litmuschaos/github-chaos-actions@master
+        uses: uditgaurav/k8s-actions@master
         env:
           LITMUS_CLEANUP: true
