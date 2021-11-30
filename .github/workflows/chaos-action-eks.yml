@@ -18,9 +18,6 @@ jobs:
           aws-region: eu-west-2
 
       - run: |
-          export PATH=$PATH:/usr/local/bin/aws
-
-      - run: |
           whereis aws
           echo $PATH
 
@@ -33,17 +30,12 @@ jobs:
         run: |
           kubectl get nodes
           kubectl get pods -A
-
-      - name: Setting up kubeconfig ENV for Github Chaos Action
-        run: echo ::set-env name=KUBE_CONFIG_DATA::$(cat $HOME/.kube/config | base64)
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
+          
       - name: run some commands
         run: kubectl get nodes
 
       - name: Setup Litmus
-        uses: litmuschaos/github-chaos-actions@v0.4.0
+        uses: uditgaurav/k8s-actions@master
         env:
           INSTALL_LITMUS: true
 
