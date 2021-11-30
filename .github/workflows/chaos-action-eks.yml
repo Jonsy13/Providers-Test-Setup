@@ -5,6 +5,11 @@ on:
 jobs:
   Chaos-Eks-Action:
     runs-on: ubuntu-latest
+    env:
+      AWS_SECRET_ACCESS_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: eu-west-2
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,10 +35,10 @@ jobs:
         run: |
           kubectl get nodes
           kubectl get pods -A
-          
+
       - name: run some commands
         run: kubectl get nodes
-      
+
       - name: Setting up kubeconfig ENV for Github Chaos Action
         run: echo ::set-env name=KUBE_CONFIG_DATA::$(base64 -w 0 ~/.kube/config)
         env:
@@ -43,22 +48,17 @@ jobs:
         uses: uditgaurav/k8s-actions@master
         env:
           INSTALL_LITMUS: true
-          AWS_SECRET_ACCESS_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-west-2
 
-      # - name: Running Litmus pod delete chaos experiment
-      #   uses: litmuschaos/github-chaos-actions@v0.4.0
-      #   env:
-      #     EXPERIMENT_NAME: pod-delete
-      #     EXPERIMENT_IMAGE: litmuschaos/go-runner
-      #     EXPERIMENT_IMAGE_TAG: latest
-      #     JOB_CLEANUP_POLICY: delete
+      - name: Running Litmus pod delete chaos experiment
+        uses: uditgaurav/k8s-actions@master
+        env:
+          EXPERIMENT_NAME: pod-delete
+          EXPERIMENT_IMAGE: litmuschaos/go-runner
+          EXPERIMENT_IMAGE_TAG: latest
+          JOB_CLEANUP_POLICY: delete
 
-      # - name: Uninstall Litmus
-      #   uses: litmuschaos/github-chaos-actions@v0.4.0
-      #   env:
-      #     LITMUS_CLEANUP: true
-
-      - name: run some commands
-        run: kubectl get nodes
+      - name: Uninstall Litmus
+        if: always()
+        uses: uditgaurav/k8s-actions@master
+        env:
+          LITMUS_CLEANUP: true
