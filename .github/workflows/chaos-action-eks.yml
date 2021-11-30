@@ -38,6 +38,7 @@ jobs:
         uses: uditgaurav/k8s-actions@master
         env:
           INSTALL_LITMUS: true
+          KUBECONFIG: /home/runner/.kube/config
 
       # - name: Running Litmus pod delete chaos experiment
       #   uses: litmuschaos/github-chaos-actions@v0.4.0
